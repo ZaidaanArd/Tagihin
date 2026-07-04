@@ -1,26 +1,74 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #7C3AED;
+  --color-primary-bg: #EDE9FE;
+  --color-primary-text: #5B21B6;
+  --color-bg-page: #F5F5F7;
+  --color-bg-card: #FFFFFF;
+  --color-bg-sidebar: #FFFFFF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+  --color-success-text: #10B981;
+  --color-overdue-text: #EF4444;
+  --color-sent-text: #3B82F6;
+  --color-draft-text: #9CA3AF;
+  --color-neutral-bg: #F9FAFB;
+  --color-primary-light: #EDE9FE;
+  --color-primary-dark: #5B21B6;
+  --color-success-bg: #ECFDF5;
+  --color-danger-bg: #FEF2F2;
+  --color-danger-text: #EF4444;
+  --color-warning-bg: #FFFBEB;
+  --color-warning-text: #D97706;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --color-primary: #A78BFA;
+  --color-primary-bg: #2D2A5E;
+  --color-primary-text: #C4B5FD;
+  --color-bg-page: #121212;
+  --color-bg-card: #1E1E1E;
+  --color-bg-sidebar: #1A1A1A;
+  --color-text-primary: #EDEDED;
+  --color-text-secondary: #A0A0A0;
+  --color-text-muted: #6B6B6B;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.04);
+  --color-neutral-bg: #2A2A2A;
+  --color-primary-light: #2D2A5E;
+  --color-primary-dark: #C4B5FD;
+  --color-success-bg: #1A3A1A;
+  --color-danger-bg: #3A1A1A;
+  --color-danger-text: #E66A5C;
+  --color-warning-bg: #3A2A1A;
+  --color-warning-text: #E6A23C;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-bg-card) inset !important;
+  background-color: var(--color-bg-card) !important;
+  caret-color: var(--color-text-primary);
+  transition: background-color 5000s ease-in-out 0s;
 }

@@ -1,36 +1,176 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tagihin
+
+A SaaS invoice management platform built for Indonesian freelancers and small businesses. Create professional invoices in minutes, send them directly to clients, and track payment status — all in one dashboard.
+
+Live demo: [tagihin.vercel.app](https://tagihin.vercel.app)
+
+---
+
+## The Problem
+
+Most Indonesian freelancers still create invoices manually using Word, Canva, or Excel. This leads to unprofessional documents, no payment tracking, and forgotten follow-ups. Existing tools like FreshBooks or Wave are built for Western markets — wrong currency, wrong tax system, and too complex for solo freelancers.
+
+Tagihin solves this with a simple, focused tool built specifically for the Indonesian context.
+
+---
+
+## Features
+
+- Authentication — secure register and login with rate limiting and session management
+- Client management — save client data once, reuse across multiple invoices
+- Invoice creation — dynamic line items, auto-generated invoice numbers, real-time total calculation
+- Indonesian tax support — PPh 21, PPh 23, and PPN 11%
+- PDF export — download professional invoice as PDF
+- Email delivery — send invoices directly to clients via email
+- Payment tracking — track invoice status: Draft, Sent, Paid, Overdue
+- Public invoice link — share a view-only link with clients without requiring login
+- Dashboard summary — see total billed, unpaid, and paid amounts at a glance
+- Business settings — configure business profile, bank account, and logo
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| UI Components | shadcn/ui |
+| Database | PostgreSQL via Supabase |
+| Authentication | Supabase Auth |
+| PDF Generation | React PDF |
+| Email | Resend |
+| Deployment | Vercel |
+| Form Handling | React Hook Form + Zod |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20 or later
+- A Supabase account and project
+- A Resend account and API key
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/tagihin.git
+cd tagihin
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Copy the environment variables file:
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in your environment variables:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+RESEND_API_KEY=your_resend_api_key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### Database Setup
+
+Run the migration SQL in your Supabase SQL Editor:
+
+```bash
+# Copy contents of supabase/migration.sql and run it in Supabase SQL Editor
+```
+
+Create a storage bucket for user logos:
+
+```sql
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true);
+```
+
+### Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+tagihin/
+├── app/
+│   ├── (auth)/
+│   │   ├── login/
+│   │   └── register/
+│   ├── (dashboard)/
+│   │   ├── dashboard/
+│   │   ├── invoices/
+│   │   │   ├── [id]/
+│   │   │   └── new/
+│   │   ├── clients/
+│   │   └── settings/
+│   └── (public)/
+│       ├── page.tsx
+│       └── invoice/[token]/
+├── components/
+│   ├── ui/
+│   ├── invoice/
+│   ├── client/
+│   └── shared/
+├── lib/
+│   ├── supabase/
+│   ├── validations/
+│   └── utils.ts
+├── supabase/
+│   └── migration.sql
+└── types/
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is deployed on Vercel. To deploy your own instance:
 
-## Deploy on Vercel
+1. Push the repository to GitHub
+2. Import the project on [vercel.com](https://vercel.com)
+3. Add all environment variables in the Vercel dashboard
+4. Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+After deployment, update the Site URL in your Supabase dashboard under Authentication > Settings to match your Vercel URL.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For production email sending, replace `onboarding@resend.dev` with your own verified domain in Resend.
+
+---
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| NEXT_PUBLIC_SUPABASE_URL | Your Supabase project URL |
+| NEXT_PUBLIC_SUPABASE_ANON_KEY | Your Supabase anon public key |
+| SUPABASE_SERVICE_ROLE_KEY | Your Supabase service role key (keep secret) |
+| RESEND_API_KEY | Your Resend API key for sending emails |
+| NEXT_PUBLIC_APP_URL | Your app URL (e.g. https://tagihin.vercel.app) |
+
+---
+
+## License
+
+MIT
