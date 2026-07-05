@@ -99,8 +99,8 @@ export default async function InvoicesPage(props: { searchParams: Promise<Record
           </Link>
         </div>
 
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-0">
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex gap-0 overflow-x-auto">
             {tabs.map((t) => {
               const isActive = t.key === "all"
                 ? (!tab || tab === "all")

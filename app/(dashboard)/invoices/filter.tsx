@@ -34,7 +34,7 @@ export function InvoiceFilter() {
           placeholder="Cari..."
           defaultValue={searchParams.get("q") ?? ""}
           onChange={handleSearch}
-          className="h-9 w-[240px] rounded-md border border-border bg-bg-card pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary-bg"
+          className="h-9 w-full rounded-md border border-border bg-bg-card pl-9 pr-3 text-sm text-text-primary placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary-bg md:w-[240px]"
         />
       </div>
       <button className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-bg-card text-text-secondary transition-colors hover:bg-neutral-bg">

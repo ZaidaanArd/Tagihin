@@ -77,94 +77,14 @@ export function InvoiceView({ invoice, userData }: Props) {
   const computedTotal = subtotal + taxAmount;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => router.push("/invoices")}
-          className="flex items-center gap-1.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
-        >
-          <ArrowLeft size={16} />
-          Kembali
-        </button>
-        <div className="flex items-center gap-1.5">
-          <PDFDownloadLink
-            document={<PDFDocument invoice={invoice} userData={userData} />}
-            fileName={`${inv.invoice_number}.pdf`}
-          >
-            {({ loading }) => (
-              <Button variant="outline" size="sm" disabled={loading}>
-                <FileDown className="h-3.5 w-3.5" />
-                {loading ? "Memproses..." : "Download PDF"}
-              </Button>
-            )}
-          </PDFDownloadLink>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={async () => {
-              const url = `${process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin}/invoice/${inv.public_token}`;
-              await navigator.clipboard.writeText(url);
-              setCopied(true);
-              setTimeout(() => setCopied(false), 2000);
-            }}
-          >
-            {copied ? <Check className="h-3.5 w-3.5" /> : <Link className="h-3.5 w-3.5" />}
-            {copied ? "Tersalin!" : "Copy Link"}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={emailSending}
-            onClick={async () => {
-              const clientEmail = c?.email;
-              const clientName = c?.name;
-              if (!clientEmail) {
-                setEmailMsg("Klien belum memiliki email. Tambahkan email klien terlebih dahulu.");
-                return;
-              }
-              if (status === "draft") {
-                if (!window.confirm(`Invoice akan dikirim ke ${clientName} (${clientEmail}). Lanjutkan?`)) {
-                  return;
-                }
-              }
-              setEmailSending(true);
-              setEmailMsg(null);
-              const result = await sendInvoiceEmail(inv.id as string);
-              if ("error" in result) {
-                setEmailMsg(result.error);
-              } else {
-                setStatus("sent");
-                setEmailMsg(`Invoice berhasil dikirim ke ${clientEmail}`);
-              }
-              setEmailSending(false);
-            }}
-          >
-            <Send className="h-4 w-4" />
-            {emailSending ? "Mengirim..." : "Kirim ke Klien"}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={async () => {
-              if (window.confirm("Yakin ingin menghapus invoice ini?")) {
-                await deleteInvoice(inv.id as string);
-              }
-            }}
-          >
-            Hapus
-          </Button>
-          <select
-            value={status}
-            onChange={(e) => handleStatusChange(e.target.value)}
-            className="flex h-9 rounded-lg border border-border bg-bg-card px-3 py-2 text-sm text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-          >
-            <option value="draft">Draft</option>
-            <option value="sent">Terkirim</option>
-            <option value="paid">Lunas</option>
-            <option value="overdue">Overdue</option>
-          </select>
-        </div>
-      </div>
+    <div className="space-y-6 px-4 py-4 md:px-6 md:pt-6">
+      <button
+        onClick={() => router.push("/invoices")}
+        className="flex items-center gap-1.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
+      >
+        <ArrowLeft size={16} />
+        Kembali
+      </button>
 
       {statusError && (
         <p className="rounded-lg border border-danger-bg bg-danger-bg px-3 py-2 text-sm text-danger-text">
@@ -277,6 +197,79 @@ export function InvoiceView({ invoice, userData }: Props) {
             <p className="mt-1 text-sm text-text-secondary">{String(inv.notes)}</p>
           </div>
         ) : null}
+      </div>
+
+      {/* Actions (mobile: below card, desktop: inline) */}
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-1.5">
+        <div className="flex flex-wrap gap-2 md:items-center md:gap-1.5">
+          <PDFDownloadLink
+            document={<PDFDocument invoice={invoice} userData={userData} />}
+            fileName={`${inv.invoice_number}.pdf`}
+          >
+            {({ loading }) => (
+              <Button variant="outline" size="sm" disabled={loading}>
+                <FileDown className="h-3.5 w-3.5" />
+                {loading ? "Memproses..." : "Download PDF"}
+              </Button>
+            )}
+          </PDFDownloadLink>
+          <Button variant="outline" size="sm"
+            onClick={async () => {
+              const url = `${process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin}/invoice/${inv.public_token}`;
+              await navigator.clipboard.writeText(url);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+          >
+            {copied ? <Check className="h-3.5 w-3.5" /> : <Link className="h-3.5 w-3.5" />}
+            {copied ? "Tersalin!" : "Copy Link"}
+          </Button>
+          <Button variant="outline" size="sm" disabled={emailSending}
+            onClick={async () => {
+              const clientEmail = c?.email;
+              const clientName = c?.name;
+              if (!clientEmail) {
+                setEmailMsg("Klien belum memiliki email. Tambahkan email klien terlebih dahulu.");
+                return;
+              }
+              if (status === "draft") {
+                if (!window.confirm(`Invoice akan dikirim ke ${clientName} (${clientEmail}). Lanjutkan?`)) return;
+              }
+              setEmailSending(true);
+              setEmailMsg(null);
+              const result = await sendInvoiceEmail(inv.id as string);
+              if ("error" in result) {
+                setEmailMsg(result.error);
+              } else {
+                setStatus("sent");
+                setEmailMsg(`Invoice berhasil dikirim ke ${clientEmail}`);
+              }
+              setEmailSending(false);
+            }}
+          >
+            <Send className="h-4 w-4" />
+            {emailSending ? "Mengirim..." : "Kirim ke Klien"}
+          </Button>
+          <Button variant="outline" size="sm"
+            onClick={async () => {
+              if (window.confirm("Yakin ingin menghapus invoice ini?")) {
+                await deleteInvoice(inv.id as string);
+              }
+            }}
+          >
+            Hapus
+          </Button>
+        </div>
+        <select
+          value={status}
+          onChange={(e) => handleStatusChange(e.target.value)}
+          className="flex h-9 rounded-lg border border-border bg-bg-card px-3 py-2 text-sm text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+        >
+          <option value="draft">Draft</option>
+          <option value="sent">Terkirim</option>
+          <option value="paid">Lunas</option>
+          <option value="overdue">Overdue</option>
+        </select>
       </div>
     </div>
   );
