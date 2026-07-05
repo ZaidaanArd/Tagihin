@@ -79,8 +79,8 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mx-6 overflow-hidden rounded-lg border border-border bg-bg-card">
-        <div className="grid grid-cols-2 divide-x divide-border md:grid-cols-2">
-          <div className="p-5">
+        <div className="flex flex-col md:grid md:grid-cols-2">
+          <div className="border-b border-border p-5 md:border-b-0 md:border-r">
             <div className="flex items-center gap-1.5">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" />
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-text-secondary">Tertunggak</span>
-                <span className="font-medium text-[#EF4444]">{formatRupiah(overdue)}</span>
+                <span className="font-medium text-[#EF4444] text-sm md:text-base">{formatRupiah(overdue)}</span>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ export default async function DashboardPage() {
               <span className="text-sm font-medium text-text-secondary">Lunas</span>
             </div>
             <div className="mt-4">
-              <span className="text-lg font-semibold text-text-primary">{formatRupiah(paid)}</span>
+              <span className="text-base font-semibold text-text-primary md:text-lg">{formatRupiah(paid)}</span>
             </div>
           </div>
         </div>
@@ -137,43 +137,60 @@ export default async function DashboardPage() {
           </Link>
         </div>
         {recentInvoices.length > 0 ? (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border bg-neutral-bg">
-                {["No. Invoice", "Klien", "Status", "Total", "Tanggal"].map((h) => (
-                  <th key={h} className="px-4 py-[10px] text-left text-xs font-medium uppercase tracking-[0.05em] text-text-secondary">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* Mobile card list */}
+            <div className="block space-y-2 p-4 md:hidden">
               {recentInvoices.map((inv) => {
                 const clientData = inv.clients as { name: string } | { name: string }[] | null;
                 const clientName = Array.isArray(clientData) ? clientData[0]?.name ?? "—" : clientData?.name ?? "—";
                 const st = inv.status as string;
                 return (
-                  <tr key={inv.id} className="border-b border-border-light text-sm text-text-primary transition-colors last:border-b-0 hover:bg-neutral-bg">
-                    <td className="px-4 py-3">{inv.invoice_number}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-bg text-[11px] font-medium text-primary-text">
-                          {getInitials(clientName)}
+                  <Link key={inv.id} href={`/invoices/${inv.id}`}>
+                    <div className="rounded-lg border border-border bg-bg-card p-4 transition-colors hover:bg-neutral-bg">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-text-primary">{inv.invoice_number}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="h-[6px] w-[6px] rounded-full shrink-0" style={{ backgroundColor: statusColors[st] ?? "#9CA3AF" }} />
+                          <span style={{ color: statusColors[st] ?? "#9CA3AF" }} className="text-sm">{statusLabels[st] ?? "Draft"}</span>
                         </div>
-                        <span>{clientName}</span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="h-[6px] w-[6px] rounded-full shrink-0" style={{ backgroundColor: statusColors[st] ?? "#9CA3AF" }} />
-                        <span style={{ color: statusColors[st] ?? "#9CA3AF" }} className="text-sm">{statusLabels[st] ?? "Draft"}</span>
+                      <p className="mt-1 text-sm text-text-secondary">{clientName}</p>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="text-sm font-medium text-text-primary">{formatRupiah(inv.total)}</span>
+                        <span className="text-xs text-text-muted">{formatDate(inv.created_at)}</span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3 font-medium text-text-primary">{formatRupiah(inv.total)}</td>
-                    <td className="px-4 py-3 text-text-secondary">{formatDate(inv.created_at)}</td>
-                  </tr>
+                    </div>
+                  </Link>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+            {/* Desktop table */}
+            <table className="hidden w-full md:table">
+              <thead>
+                <tr className="border-b border-border bg-neutral-bg">
+                  {["No. Invoice", "Klien", "Status", "Total", "Tanggal"].map((h) => (
+                    <th key={h} className="px-4 py-[10px] text-left text-xs font-medium uppercase tracking-[0.05em] text-text-secondary">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {recentInvoices.map((inv) => {
+                  const clientData = inv.clients as { name: string } | { name: string }[] | null;
+                  const clientName = Array.isArray(clientData) ? clientData[0]?.name ?? "—" : clientData?.name ?? "—";
+                  const st = inv.status as string;
+                  return (
+                    <tr key={inv.id} className="border-b border-border-light text-sm text-text-primary transition-colors last:border-b-0 hover:bg-neutral-bg">
+                      <td className="px-4 py-3">{inv.invoice_number}</td>
+                      <td className="px-4 py-3"><div className="flex items-center gap-2.5"><div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-bg text-[11px] font-medium text-primary-text">{getInitials(clientName)}</div><span>{clientName}</span></div></td>
+                      <td className="px-4 py-3"><div className="flex items-center gap-1.5"><span className="h-[6px] w-[6px] rounded-full shrink-0" style={{ backgroundColor: statusColors[st] ?? "#9CA3AF" }} /><span style={{ color: statusColors[st] ?? "#9CA3AF" }} className="text-sm">{statusLabels[st] ?? "Draft"}</span></div></td>
+                      <td className="px-4 py-3 font-medium text-text-primary">{formatRupiah(inv.total)}</td>
+                      <td className="px-4 py-3 text-text-secondary">{formatDate(inv.created_at)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
         ) : (
           <div className="px-4 py-8 text-center text-sm text-text-muted">
             Belum ada invoice.{" "}

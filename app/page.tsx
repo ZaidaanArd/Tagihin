@@ -32,7 +32,7 @@ export default async function LandingPage() {
             <Link href="/dashboard" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">Dashboard</Link>
           ) : (
             <>
-              <Link href="/login" className="hidden text-sm font-medium text-text-secondary transition-colors hover:text-primary md:inline">Masuk</Link>
+              <Link href="/login" className="hidden text-sm font-medium text-[#6B7280] transition-colors hover:text-[#7C3AED] md:inline">Masuk</Link>
               <Link href="/register" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">Daftar</Link>
             </>
           )}
@@ -43,10 +43,10 @@ export default async function LandingPage() {
       <section className="flex min-h-[85vh] items-start bg-white px-6 pt-16 md:px-12 md:pt-24" style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 39px, #F0F0F0 39px, #F0F0F0 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, #F0F0F0 39px, #F0F0F0 40px)" }}>
         <div className="mx-auto grid w-full max-w-6xl items-center gap-12 md:grid-cols-2">
           <div>
-            <h1 className="text-[28px] font-bold leading-tight text-text-primary md:text-[44px]">
+            <h1 className="text-[28px] font-bold leading-tight text-[#111827] md:text-[44px]">
               Invoice profesional untuk freelancer dan UMKM Indonesia
             </h1>
-            <p className="mt-4 max-w-md text-base text-text-secondary">
+            <p className="mt-4 max-w-md text-base text-[#6B7280]">
               Buat, kirim, dan lacak invoice dalam hitungan menit. Dirancang khusus untuk kebutuhan bisnis Indonesia dengan support PPh dan PPN.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 md:flex-row">
@@ -54,7 +54,7 @@ export default async function LandingPage() {
                 Buat Invoice Gratis
                 <ArrowRight size={16} />
               </Link>
-              <Link href="/login" className="w-full rounded-lg border border-border bg-white px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-neutral-bg md:w-auto">
+              <Link href="/login" className="w-full rounded-lg border border-border bg-white px-6 py-3 text-sm font-medium text-[#6B7280] transition-colors hover:bg-neutral-bg md:w-auto">
                 Masuk
               </Link>
             </div>
@@ -72,15 +72,15 @@ export default async function LandingPage() {
       {/* Features */}
       <section className="bg-white px-6 py-20 md:px-12">
         <div className="mx-auto max-w-6xl text-center">
-          <h2 className="text-[28px] font-bold text-text-primary">Semua yang kamu butuhkan</h2>
+          <h2 className="text-[28px] font-bold text-[#111827]">Semua yang kamu butuhkan</h2>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {features.map((f) => (
               <div key={f.title} className="group rounded-xl border border-border bg-white p-6 text-left transition-shadow hover:shadow-lg">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-bg">
                   <f.icon className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-4 text-sm font-semibold text-text-primary">{f.title}</h3>
-                <p className="mt-1 text-sm text-text-secondary">{f.desc}</p>
+                <h3 className="mt-4 text-sm font-semibold text-[#111827]">{f.title}</h3>
+                <p className="mt-1 text-sm text-[#6B7280]">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -90,7 +90,7 @@ export default async function LandingPage() {
       {/* How It Works */}
       <section className="bg-[#F5F5F7] px-6 py-20 md:px-12">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-[28px] font-bold text-text-primary">Cara kerja Tagihin</h2>
+          <h2 className="text-[28px] font-bold text-[#111827]">Cara kerja Tagihin</h2>
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {[
               { num: "01", title: "Daftar gratis", desc: "Daftar dalam 30 detik, tanpa kartu kredit." },
@@ -102,8 +102,8 @@ export default async function LandingPage() {
                   {step.num}
                 </div>
                 {i < 2 && <div className="absolute left-[calc(50%+36px)] top-7 hidden h-px w-[calc(100%-72px)] border-t-2 border-dashed border-primary/30 md:block" />}
-                <h3 className="mt-4 text-sm font-semibold text-text-primary">{step.title}</h3>
-                <p className="mt-1 text-sm text-text-secondary">{step.desc}</p>
+                <h3 className="mt-4 text-sm font-semibold text-[#111827]">{step.title}</h3>
+                <p className="mt-1 text-sm text-[#6B7280]">{step.desc}</p>
               </div>
             ))}
           </div>

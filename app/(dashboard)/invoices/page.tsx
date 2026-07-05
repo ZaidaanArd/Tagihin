@@ -125,17 +125,47 @@ export default async function InvoicesPage(props: { searchParams: Promise<Record
         </div>
       </div>
 
-      <div className="mx-6 mt-4 overflow-x-auto rounded-lg border border-border bg-bg-card">
+      {/* Mobile card list */}
+      <div className="mx-4 mt-4 block space-y-2 md:hidden">
+        {filtered.length > 0 ? (
+          filtered.map((inv) => {
+            const clientData = inv.clients as { name: string } | { name: string }[] | null;
+            const clientName = Array.isArray(clientData) ? clientData[0]?.name ?? "—" : clientData?.name ?? "—";
+            const st = inv.status as string;
+            return (
+              <Link key={inv.id} href={`/invoices/${inv.id}`}>
+                <div className="rounded-lg border border-border bg-bg-card p-4 transition-colors hover:bg-neutral-bg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-text-primary">{inv.invoice_number}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="h-[6px] w-[6px] rounded-full shrink-0" style={{ backgroundColor: statusColors[st] ?? "#9CA3AF" }} />
+                      <span style={{ color: statusColors[st] ?? "#9CA3AF" }} className="text-sm">{statusLabels[st] ?? "Draft"}</span>
+                    </div>
+                  </div>
+                  <p className="mt-1 text-sm text-text-secondary">{clientName}</p>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-sm font-medium text-text-primary">{formatRupiah(inv.total)}</span>
+                    <span className="text-xs text-text-muted">{formatDate(inv.due_date ?? inv.created_at)}</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })
+        ) : (
+          <div className="rounded-lg border border-border bg-bg-card p-4 text-center text-sm text-text-muted">
+            Belum ada invoice.{" "}
+            <Link href="/invoices/new" className="font-medium text-primary hover:text-primary-text">Buat invoice sekarang</Link>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="mx-6 mt-4 hidden overflow-x-auto rounded-lg border border-border bg-bg-card md:block">
         <table className="w-full">
           <thead>
             <tr className="bg-neutral-bg border-b border-border">
               {["No. Invoice", "Klien", "Total", "Jatuh Tempo", "Status", ""].map((h, i) => (
-                <th
-                  key={h}
-                  className={`px-4 py-[10px] text-left text-xs font-medium uppercase tracking-[0.05em] text-text-secondary ${i === 3 ? "hidden md:table-cell" : ""}`}
-                >
-                  {h}
-                </th>
+                <th key={h} className={`px-4 py-[10px] text-left text-xs font-medium uppercase tracking-[0.05em] text-text-secondary ${i === 3 ? "hidden md:table-cell" : ""}`}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -143,69 +173,21 @@ export default async function InvoicesPage(props: { searchParams: Promise<Record
             {filtered.length > 0 ? (
               filtered.map((inv) => {
                 const clientData = inv.clients as { name: string } | { name: string }[] | null;
-                const clientName = Array.isArray(clientData)
-                  ? clientData[0]?.name ?? "—"
-                  : clientData?.name ?? "—";
+                const clientName = Array.isArray(clientData) ? clientData[0]?.name ?? "—" : clientData?.name ?? "—";
                 const st = inv.status as string;
                 return (
-                  <tr
-                    key={inv.id}
-                    className="border-b border-border-light text-sm text-text-primary transition-colors last:border-b-0 hover:bg-neutral-bg group"
-                  >
-                    <td className="px-4 py-3">
-                      <Link href={`/invoices/${inv.id}`} className="text-inherit no-underline hover:text-primary">
-                        {inv.invoice_number}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link href={`/invoices/${inv.id}`} className="flex items-center gap-2.5 text-inherit no-underline">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-bg text-[11px] font-medium text-primary-text">
-                          {getInitials(clientName)}
-                        </div>
-                        <span>{clientName}</span>
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 font-medium text-text-primary">
-                      <Link href={`/invoices/${inv.id}`} className="text-inherit no-underline">
-                        {formatRupiah(inv.total)}
-                      </Link>
-                    </td>
-                    <td className="hidden px-4 py-3 text-text-secondary md:table-cell">
-                      <Link href={`/invoices/${inv.id}`} className="text-inherit no-underline">
-                        {formatDate(inv.due_date ?? inv.created_at)}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link href={`/invoices/${inv.id}`} className="flex items-center gap-1.5 text-inherit no-underline">
-                        <span
-                          className="h-[6px] w-[6px] rounded-full shrink-0"
-                          style={{ backgroundColor: statusColors[st] ?? "#9CA3AF" }}
-                        />
-                        <span style={{ color: statusColors[st] ?? "#9CA3AF" }} className="text-sm">
-                          {statusLabels[st] ?? "Draft"}
-                        </span>
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/invoices/${inv.id}`}
-                        className="flex h-8 w-8 items-center justify-center rounded-md text-text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-border-light hover:text-text-primary"
-                      >
-                        <MoreHorizontal size={16} />
-                      </Link>
-                    </td>
+                  <tr key={inv.id} className="border-b border-border-light text-sm text-text-primary transition-colors last:border-b-0 hover:bg-neutral-bg group">
+                    <td className="px-4 py-3"><Link href={`/invoices/${inv.id}`} className="text-inherit no-underline hover:text-primary">{inv.invoice_number}</Link></td>
+                    <td className="px-4 py-3"><Link href={`/invoices/${inv.id}`} className="flex items-center gap-2.5 text-inherit no-underline"><div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-bg text-[11px] font-medium text-primary-text">{getInitials(clientName)}</div><span>{clientName}</span></Link></td>
+                    <td className="px-4 py-3 font-medium text-text-primary"><Link href={`/invoices/${inv.id}`} className="text-inherit no-underline">{formatRupiah(inv.total)}</Link></td>
+                    <td className="hidden px-4 py-3 text-text-secondary md:table-cell"><Link href={`/invoices/${inv.id}`} className="text-inherit no-underline">{formatDate(inv.due_date ?? inv.created_at)}</Link></td>
+                    <td className="px-4 py-3"><Link href={`/invoices/${inv.id}`} className="flex items-center gap-1.5 text-inherit no-underline"><span className="h-[6px] w-[6px] rounded-full shrink-0" style={{ backgroundColor: statusColors[st] ?? "#9CA3AF" }} /><span style={{ color: statusColors[st] ?? "#9CA3AF" }} className="text-sm">{statusLabels[st] ?? "Draft"}</span></Link></td>
+                    <td className="px-4 py-3"><Link href={`/invoices/${inv.id}`} className="flex h-8 w-8 items-center justify-center rounded-md text-text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-border-light hover:text-text-primary"><MoreHorizontal size={16} /></Link></td>
                   </tr>
                 );
               })
             ) : (
-              <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-sm text-text-muted">
-                  Belum ada invoice.{" "}
-                  <Link href="/invoices/new" className="font-medium text-primary hover:text-primary-text">
-                    Buat invoice sekarang
-                  </Link>
-                </td>
-              </tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-text-muted">Belum ada invoice. <Link href="/invoices/new" className="font-medium text-primary hover:text-primary-text">Buat invoice sekarang</Link></td></tr>
             )}
           </tbody>
         </table>

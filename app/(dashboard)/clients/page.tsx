@@ -34,7 +34,32 @@ export default async function ClientsPage() {
         </Link>
       </div>
 
-      <div className="mx-6 overflow-x-auto rounded-lg border border-border bg-bg-card">
+      {/* Mobile card list */}
+      <div className="mx-4 block space-y-2 md:hidden">
+        {clients && clients.length > 0 ? (
+          clients.map((client) => (
+            <div key={client.id} className="rounded-lg border border-border bg-bg-card p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-text-primary">{client.name}</span>
+                <div className="flex items-center gap-1">
+                  <Link href={`/clients/${client.id}`} className="rounded-md px-2 py-1 text-xs text-text-secondary transition-colors hover:bg-neutral-bg hover:text-primary-dark">Edit</Link>
+                  <DeleteClientButton id={client.id} />
+                </div>
+              </div>
+              <p className="mt-1 text-sm text-text-secondary">{client.email ?? "—"}</p>
+              <p className="text-sm text-text-secondary">{client.phone ?? "—"}</p>
+            </div>
+          ))
+        ) : (
+          <div className="rounded-lg border border-border bg-bg-card p-4 text-center text-sm text-text-muted">
+            Belum ada klien.{" "}
+            <Link href="/clients/new" className="font-medium text-primary hover:text-primary-dark">Tambah klien sekarang</Link>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="mx-6 hidden overflow-x-auto rounded-lg border border-border bg-bg-card md:block">
         <table className="w-full">
           <thead>
             <tr className="bg-bg-sidebar text-xs text-text-muted">
@@ -48,43 +73,16 @@ export default async function ClientsPage() {
           <tbody>
             {clients && clients.length > 0 ? (
               clients.map((client) => (
-                <tr
-                  key={client.id}
-                  className="border-b border-border text-sm text-text-primary last:border-b-0"
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-[11px] font-medium text-primary-dark">
-                        {getInitials(client.name)}
-                      </div>
-                      <span>{client.name}</span>
-                    </div>
-                  </td>
+                <tr key={client.id} className="border-b border-border text-sm text-text-primary last:border-b-0">
+                  <td className="px-4 py-3"><div className="flex items-center gap-2.5"><div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-[11px] font-medium text-primary-dark">{getInitials(client.name)}</div><span>{client.name}</span></div></td>
                   <td className="px-4 py-3 text-text-secondary">{client.email ?? "—"}</td>
                   <td className="px-4 py-3 text-text-secondary">{client.phone ?? "—"}</td>
                   <td className="px-4 py-3 text-text-secondary">{client.npwp ?? "—"}</td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Link
-                        href={`/clients/${client.id}`}
-                        className="rounded-md px-2 py-1 text-xs text-text-secondary transition-colors hover:bg-neutral-bg hover:text-primary-dark"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteClientButton id={client.id} />
-                    </div>
-                  </td>
+                  <td className="px-4 py-3 text-right"><div className="flex items-center justify-end gap-1"><Link href={`/clients/${client.id}`} className="rounded-md px-2 py-1 text-xs text-text-secondary transition-colors hover:bg-neutral-bg hover:text-primary-dark">Edit</Link><DeleteClientButton id={client.id} /></div></td>
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-sm text-text-muted">
-                  Belum ada klien.{" "}
-                  <Link href="/clients/new" className="text-primary hover:text-primary-dark">
-                    Tambah klien sekarang
-                  </Link>
-                </td>
-              </tr>
+              <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-text-muted">Belum ada klien. <Link href="/clients/new" className="text-primary hover:text-primary-dark">Tambah klien sekarang</Link></td></tr>
             )}
           </tbody>
         </table>
