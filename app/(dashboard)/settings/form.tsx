@@ -34,6 +34,7 @@ export function SettingsForm({ user, email }: Props) {
   const [state, formAction, pending] = useActionState(saveSettings, undefined);
   const [logoUrl, setLogoUrl] = useState<string | null>((user?.logo_url as string) ?? null);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const { register, handleSubmit, formState: { errors } } = useForm<SettingsValues>({
     resolver: zodResolver(settingsSchema),
@@ -63,14 +64,71 @@ export function SettingsForm({ user, email }: Props) {
 
   async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    const input = e.target;
     if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setUploadError("Format gambar harus JPG, PNG, atau WebP.");
+      input.value = "";
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setUploadError("Ukuran gambar maksimal 2MB.");
+      input.value = "";
+      return;
+    }
+
+    setUploadError(null);
     setUploading(true);
+
+    const compressed = await new Promise<Blob | null>((resolve) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const MAX_SIZE = 800;
+        let w = img.width;
+        let h = img.height;
+        if (w > MAX_SIZE || h > MAX_SIZE) {
+          const ratio = Math.min(MAX_SIZE / w, MAX_SIZE / h);
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.8);
+      };
+      img.onerror = () => resolve(null);
+      img.src = URL.createObjectURL(file);
+    });
+
+    if (!compressed) {
+      setUploadError("Gagal memproses gambar.");
+      setUploading(false);
+      input.value = "";
+      return;
+    }
+
+    if (compressed.size > 1 * 1024 * 1024) {
+      setUploadError("Ukuran gambar terlalu besar setelah kompresi. Coba upload gambar yang lebih kecil.");
+      setUploading(false);
+      input.value = "";
+      return;
+    }
+
     const fd = new FormData();
-    fd.set("logo", file);
+    const ext = file.name.split(".").pop();
+    fd.set("logo", compressed, `logo-${Date.now()}.${ext}`);
     const result = await uploadLogo(undefined, fd);
     if ("success" in result && result.url) {
-      setLogoUrl(result.url);
+      setLogoUrl(result.url + "?t=" + Date.now());
+      setUploadError(null);
+    } else {
+      setUploadError("error" in result ? (result.error ?? "Gagal mengupload logo.") : "Gagal mengupload logo.");
     }
+    input.value = "";
     setUploading(false);
   }
 
@@ -175,7 +233,12 @@ export function SettingsForm({ user, email }: Props) {
         <div className="p-4">
           <div className="flex items-start gap-6">
             <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-neutral-bg">
-              {logoUrl ? (
+              {uploading ? (
+                <svg className="h-6 w-6 animate-spin text-primary" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              ) : logoUrl ? (
                 <Image src={logoUrl} alt="Logo" width={80} height={80} className="object-contain" />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-text-muted">
@@ -188,6 +251,7 @@ export function SettingsForm({ user, email }: Props) {
                 {uploading ? "Mengupload..." : "Upload Logo"}
                 <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} disabled={uploading} />
               </label>
+              {uploadError && <p className="text-xs text-danger-text">{uploadError}</p>}
               {logoUrl && (
                 <button
                   type="button"

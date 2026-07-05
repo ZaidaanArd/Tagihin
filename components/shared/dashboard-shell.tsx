@@ -12,11 +12,9 @@ type DashboardShellProps = {
 export function DashboardShell({ user, children }: DashboardShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const sidebarWidth = collapsed ? 60 : 240;
 
   return (
     <div className="flex min-h-screen bg-bg-page">
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
@@ -24,7 +22,6 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         />
       )}
 
-      {/* Mobile sidebar (slide-in) */}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-[240px] transition-transform duration-200 md:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
@@ -33,16 +30,11 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         <Sidebar user={user} collapsed={false} onToggle={() => {}} mobileClose={() => setMobileOpen(false)} />
       </div>
 
-      {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Sidebar user={user} collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
       </div>
 
-      <main
-        className="flex-1 transition-all duration-200 md:ml-[240px]"
-        style={{ marginLeft: sidebarWidth }}
-      >
-        {/* Mobile topbar with hamburger */}
+      <main className={`flex-1 transition-all duration-200 ${collapsed ? "md:ml-[60px]" : "md:ml-[240px]"}`}>
         <div className="flex items-center border-b border-border bg-white px-4 py-3 md:hidden">
           <button
             onClick={() => setMobileOpen(true)}

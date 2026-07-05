@@ -39,14 +39,18 @@ export async function uploadLogo(_prev: unknown, formData: FormData) {
   const file = formData.get("logo") as File | null;
   if (!file) return { error: "Pilih file terlebih dahulu." };
 
+  console.log("File received:", file?.name, file?.size, file?.type);
+
   const ext = file.name.split(".").pop();
   const filePath = `${user.id}/logo.${ext}`;
 
-  const { error: uploadErr } = await supabase.storage
+  const { data: uploadData, error: uploadErr } = await supabase.storage
     .from("avatars")
     .upload(filePath, file, { upsert: true });
 
-  if (uploadErr) return { error: "Gagal mengunggah logo." };
+  console.log("Upload result:", uploadData, uploadErr?.message);
+
+  if (uploadErr) return { error: `Gagal mengunggah logo: ${uploadErr.message}` };
 
   const { data: urlData } = supabase.storage
     .from("avatars")

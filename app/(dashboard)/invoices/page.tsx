@@ -129,10 +129,10 @@ export default async function InvoicesPage(props: { searchParams: Promise<Record
         <table className="w-full">
           <thead>
             <tr className="bg-neutral-bg border-b border-border">
-              {["No. Invoice", "Klien", "Total", "Jatuh Tempo", "Status", ""].map((h) => (
+              {["No. Invoice", "Klien", "Total", "Jatuh Tempo", "Status", ""].map((h, i) => (
                 <th
                   key={h}
-                  className="px-4 py-[10px] text-left text-xs font-medium uppercase tracking-[0.05em] text-text-secondary"
+                  className={`px-4 py-[10px] text-left text-xs font-medium uppercase tracking-[0.05em] text-text-secondary ${i === 3 ? "hidden md:table-cell" : ""}`}
                 >
                   {h}
                 </th>
@@ -170,7 +170,7 @@ export default async function InvoicesPage(props: { searchParams: Promise<Record
                         {formatRupiah(inv.total)}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-text-secondary">
+                    <td className="hidden px-4 py-3 text-text-secondary md:table-cell">
                       <Link href={`/invoices/${inv.id}`} className="text-inherit no-underline">
                         {formatDate(inv.due_date ?? inv.created_at)}
                       </Link>

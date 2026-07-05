@@ -79,7 +79,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mx-6 overflow-hidden rounded-lg border border-border bg-bg-card">
-        <div className="grid grid-cols-1 divide-y divide-border md:grid-cols-2 md:divide-x md:divide-y-0">
+        <div className="grid grid-cols-2 divide-x divide-border md:grid-cols-2">
           <div className="p-5">
             <div className="flex items-center gap-1.5">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
