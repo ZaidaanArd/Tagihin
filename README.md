@@ -2,7 +2,7 @@
 
 A SaaS invoice management platform built for Indonesian freelancers and small businesses. Create professional invoices in minutes, send them directly to clients, and track payment status — all in one dashboard.
 
-Live demo: [tagihin.vercel.app](https://tagihin.vercel.app)
+Live demo: [tagihin-indol.vercel.app](https://tagihin-indol.vercel.app/)
 
 ---
 
@@ -149,7 +149,7 @@ tagihin/
 This project is deployed on Vercel. To deploy your own instance:
 
 1. Push the repository to GitHub
-2. Import the project on [vercel.com](https://tagihin-indol.vercel.app/)
+2. Import the project on [vercel.com](https://vercel.com)
 3. Add all environment variables in the Vercel dashboard
 4. Deploy
 
