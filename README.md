@@ -31,18 +31,18 @@ Tagihin solves this with a simple, focused tool built specifically for the Indon
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
-| UI Components | shadcn/ui |
-| Database | PostgreSQL via Supabase |
-| Authentication | Supabase Auth |
-| PDF Generation | React PDF |
-| Email | Resend |
-| Deployment | Vercel |
-| Form Handling | React Hook Form + Zod |
+| Layer          | Technology              |
+| -------------- | ----------------------- |
+| Framework      | Next.js 14 (App Router) |
+| Language       | TypeScript              |
+| Styling        | Tailwind CSS            |
+| UI Components  | shadcn/ui               |
+| Database       | PostgreSQL via Supabase |
+| Authentication | Supabase Auth           |
+| PDF Generation | React PDF               |
+| Email          | Resend                  |
+| Deployment     | Vercel                  |
+| Form Handling  | React Hook Form + Zod   |
 
 ---
 
@@ -149,7 +149,7 @@ tagihin/
 This project is deployed on Vercel. To deploy your own instance:
 
 1. Push the repository to GitHub
-2. Import the project on [vercel.com](https://vercel.com)
+2. Import the project on [vercel.com](https://tagihin-indol.vercel.app/)
 3. Add all environment variables in the Vercel dashboard
 4. Deploy
 
@@ -161,13 +161,13 @@ For production email sending, replace `onboarding@resend.dev` with your own veri
 
 ## Environment Variables
 
-| Variable | Description |
-|---|---|
-| NEXT_PUBLIC_SUPABASE_URL | Your Supabase project URL |
-| NEXT_PUBLIC_SUPABASE_ANON_KEY | Your Supabase anon public key |
-| SUPABASE_SERVICE_ROLE_KEY | Your Supabase service role key (keep secret) |
-| RESEND_API_KEY | Your Resend API key for sending emails |
-| NEXT_PUBLIC_APP_URL | Your app URL (e.g. https://tagihin.vercel.app) |
+| Variable                      | Description                                    |
+| ----------------------------- | ---------------------------------------------- |
+| NEXT_PUBLIC_SUPABASE_URL      | Your Supabase project URL                      |
+| NEXT_PUBLIC_SUPABASE_ANON_KEY | Your Supabase anon public key                  |
+| SUPABASE_SERVICE_ROLE_KEY     | Your Supabase service role key (keep secret)   |
+| RESEND_API_KEY                | Your Resend API key for sending emails         |
+| NEXT_PUBLIC_APP_URL           | Your app URL (e.g. https://tagihin.vercel.app) |
 
 ---
 
