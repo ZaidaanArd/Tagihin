@@ -25,7 +25,7 @@ export default async function NewInvoicePage() {
       : `INV/${new Date().getFullYear()}/${String(Math.floor(Math.random() * 999) + 1).padStart(3, "0")}`;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-7">
+    <div className="mx-auto max-w-3xl space-y-7 px-4 pt-4 pb-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[22px] font-medium text-text-primary">

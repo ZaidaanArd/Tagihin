@@ -11,6 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Tagihin — Invoice Profesional, 2 Menit Jadi",
   description: "Platform manajemen invoice untuk freelancer dan UMKM Indonesia",
+  icons: { icon: "/logo.png" },
 };
 
 export default function RootLayout({
